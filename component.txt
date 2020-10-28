@@ -1,0 +1,57 @@
+import React, { Fragment, Component } from 'react'; // HAY QUE IMPORTAR LA LIBRERIA DE REACT YO USARIA ESTA FORMA PARA IMPORTAR LA 
+import ReactDOM from 'react-dom'; // SE DEBE IMPORTAR ESTA LIBRERIA PARA PODER QUE SE RENDERICE EN EL HTML
+
+class FetchGithub extends Component { // SE AJUSTA ESTA LINEA PARA QUE EXTIENDA A COMPONENT DIRECTAMENTE
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: '',
+            location: ''
+        };
+    } // SE DEBE AGREGAR ESTA LLAVE PARA CERRAR EL CONSTRUCTOR
+    async componentDidMount() { // CONVERTIRIA ESTE PROCESO ASYNC
+        const result = await CALL('https://api.github.com/users/workshopsjsmvd'); // OBTENDRIA ESTE RESULTADO MEDIANTE PROMESA CON AWAIT Y ASI MANEJAR EL ASYNCRONISMO DE JS
+        if (result.hasOwnProperty('name')) { // DE ESTA MANERA SE VALIDA QUE FUE EXITOSO Y DA LA POSIBILIDAD DE DAR COMPORTAMIENTO 
+            this.setState({
+                name: result.name,
+                location: result.location
+            }); // ESTA SERIA LA NUEVA MANERA DE ACTUALIZAR EL ESTADO DE REACT   
+        }
+    }
+    render() {
+        return ( // AQUI SE CAMBIA LOS [] POR () YA QUE ASI ES QUE FUNCIONA EL RETURN
+            <Fragment> {/* USARIA FRAGMENT YA QUE SE NECESITA UN COMPONENTE ENVOLVENTE PARA REORNAR EL HTML SE PUEDE USAR DIV PERO FRAGMENT RETURNA EL CONTENIDO INTERNO */}
+                <h1>Nombre: {this.state.name}</h1>, {/* SE ELIMINA EL KEY YA QUE ESTO SE USA PARA LOS MAP AL RENDERIZAR UNA LISTA SE NECESITA KEYS UNICAS Y LO QUE SEA CONSTANTE NO ES NECESARIO DEJARLO EN STRING */}
+                <h2>País: {this.state.local}</h2> {/* SE ELIMINA EL KEY YA QUE ESTO SE USA PARA LOS MAP AL RENDERIZAR UNA LISTA SE NECESITA KEYS UNICAS Y LO QUE SEA CONSTANTE NO ES NECESARIO DEJARLO EN STRING */}
+            </Fragment>
+        );
+    }
+}
+// ============================== AGREGO ESTA FUNCION PARA PARAMETRIZAR LAS SOLICITUDES Y ASI PODER REUTILIZARLA =====================================|
+// =========== POR LO GENERAL ESTAS FUNCIONES SE CREAN EN OTRO ARCHIVO PERO EN ESTE CASO SE DEJA EN EL MISMO ARCHIVO PARA LA PRUEBA ==================|
+function header(url, type, data) {
+    let options = {
+        method: type,
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+        }
+    };
+    if (data !== null){
+        options['body'] = JSON.stringify(data);
+    }
+    return new Request(url, options)
+}
+
+function CALL(url, type='GET', data=null) {
+    return new Promise((resolve, reject) => {
+        fetch(header(url, type, data))
+            .then(success => resolve(success.json()))
+            .catch(error => reject(error))
+    })
+}
+
+
+ReactDOM.render(
+    <FetchGithub />,
+    document.getElementById('root')
+);
