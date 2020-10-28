@@ -1,0 +1,10 @@
+1) se importa la libreria React
+2) se importa la libreria ReactDOM
+3) se cierra la llave del constructor
+4) el componente del ciclo de vida de react "componentDidMount" se le agrega la propiedad async
+5) llamo una funcion "CALL" que hace la peticion http de tipo json con la propiedad await para que espere la respuesta y se actualiza el estado
+6) se cambian los [] por () del return del metodo render ya que asi es que se usa, sino daria error.
+7) se envuelve dentro del return con el componente <Fragment></Fragment> ya que solo se permite retornar un elemento 
+8) se ajusta la etiqueta H1 se quita el key ya que no es necesario y solo se deja como parametro a renderizar las variables del estado y se elimina la comma que esta por fuera de la etiqueta
+9) se ajusta la etiqueta H2 se quita el key ya que no es necesario y solo se deja como parametro a renderizar las variables del estado y se ajusta a location
+10) se agregan unas funciones para invocar una solicitud de tipo http para consumir el json y asi poder reutilizar siempre esa funcion
